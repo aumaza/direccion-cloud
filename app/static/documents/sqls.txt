@@ -1,0 +1,27 @@
+NOMBRE DE LA BASE DE DATOS
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+* admin_files
+
+Todas las tablas tendran como prefijo la sigla <af> y se separará del nombre principal con un guión bajo '_'
+Ejemplo: af_tablename
+
+CREAR USUARIO ESPECIFICO PARA ESTA BASE EN PRODUCCION
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+#crear nuevo usuario y luego cambiar datos en archivo connection.php
+CREATE USER 'admin_files'@'localhost' IDENTIFIED BY 'admin_files';
+GRANT ALL PRIVILEGES ON admin_files . * TO 'admin_files'@'localhost';
+FLUSH PRIVILEGES;
+
+
+ESTRUCTURA DE LA BASE DE DATOS
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Tabla Usuarios
+
+create table af_usuarios (
+id int(11) auto_increment primary key,
+name varchar(150) binary not null,
+user varchar(150) binary not null,
+password varchar(74) binary not null,
+email varchar(100) not null,
+state int(1) default 1 not null
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;

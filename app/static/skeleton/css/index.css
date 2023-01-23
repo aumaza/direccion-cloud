@@ -1,0 +1,30 @@
+.avatar {
+  vertical-align: middle;
+  horizontal-align: right;
+  width: 20px;
+  height: 20px;
+  border-radius: 60%;
+}
+
+body {
+background-color:  #3498db;
+background-repeat: no-repeat;
+background-attachment: fixed;  
+background-size: cover;
+}
+
+textarea {
+overflow: scroll;
+resize: vertical;
+font-size: 2vw; 
+min-height:100px;
+}
+
+.document-editor{
+overflow: scroll;
+resize: vertical;
+font-size: 2vw; 
+min-height:800px;
+max-width: 1100px; 
+}
+
