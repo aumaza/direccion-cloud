@@ -18,10 +18,16 @@ function navBar($conn,$user_id,$nombre){
 					        	echo '<li><button type="submit" class="btn btn-default btn-block"  name="users"><span class="glyphicon glyphicon-user" aria-hidden="true"></span> Usuarios</button></li>';
 					        }
 					          echo '<li><button type="submit" class="btn btn-default btn-block"  name="change_pass"><span class="glyphicon glyphicon-refresh" aria-hidden="true"></span> Cambiar Password</button></li>
-					          			  <li><button type="submit" class="btn btn-danger btn-block " name="logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Salir</button></li>
+					          		<li><button type="submit" class="btn btn-default btn-block"  name="documents"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Documentos</button></li>
+					          		<li><button type="submit" class="btn btn-danger btn-block " name="logout"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Salir</button></li>
 					         
 			   				<form>
-					        </ul>';
+					        
+						  </li>
+					      </ul>
+
+					      	</ul>
+					         <ul class="nav navbar-nav navbar-right">';
 					         
 					          if($conn){
 					              echo '<li class="active"><button class="btn btn-success navbar-btn"  data-toggle="tooltip" title="Conexion a la Base OK!"><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Connection</button></li>';
@@ -29,8 +35,7 @@ function navBar($conn,$user_id,$nombre){
 					              echo  '<li class="active"><button class="btn btn-danger navbar-btn" data-toggle="tooltip" title="Sin Conexion a la Base!"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Connection</button></li>';
 					          }
 					        
-			echo '</li>
-					      </ul>
+					echo '</ul>
 					    </div>
 					</nav>';
 }
@@ -38,7 +43,8 @@ function navBar($conn,$user_id,$nombre){
 
 function greeter($nombre){
 
-	echo '<div class="jumbotron">
+	echo '<div class="container">
+			<div class="jumbotron">
 				    <footer class="container-fluid text-center">
 				    <h1 align=center>Bienvenido  '.$nombre.' </h1> 
 				  </footer><hr>
@@ -51,6 +57,7 @@ function greeter($nombre){
 				    <p align=center>Dirección de Presupuesto y Evaluación de Gastos en Personal</p>
 				  </footer>
 
+				  </div>
 				  </div>';
 }
 
