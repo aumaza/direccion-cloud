@@ -81,6 +81,35 @@
     font-size: 2vw; 
     min-height:100px;   
   }
+  .option-red {
+        color: darkred;
+        background-color: red;
+    }
+
+    .option-purple {
+        color: darkmagenta;
+        background-color: magenta;
+    }
+
+    .option-yellow {
+        color: darkkhaki;
+        background-color: yellow;
+    }
+
+    .option-aqua {
+        color: mediumaquamarine;
+        background-color: aqua;
+    }
+
+    .option-blue {
+        color: lightblue;
+        background-color: blue;
+    }
+
+    .option-green {
+        color: lightgreen;
+        background-color: green;
+    }
 </style>
 
 </head>

@@ -238,6 +238,14 @@ class Works {
 		$query = mysqli_query($conn,$sql);
 		$rows = mysqli_num_rows($query);
 
+		$sql_3 = "select U.name, U.id, W.share from af_usuarios U, af_works W  where U.id = W.user_id and W.id = '$id'";
+		$query_3 = mysqli_query($conn,$sql_3);
+		while($row_3 = mysqli_fetch_array($query_3)){
+			$nombre = $row_3['name'];
+			$share = $row_3['share'];
+			$user_id = $row_3['id'];
+		}
+
 
 		echo '<div class="container">
 				  <div class="jumbotron">
@@ -246,7 +254,8 @@ class Works {
 
 				    if($rows == 0){
 				    	echo '<div class="alert alert-warning">
-								  <span class="glyphicon glyphicon-info-sign"></span> Este documento aún no está compartido con otros usuarios
+								  <span class="glyphicon glyphicon-info-sign"></span>
+								  El propiertario de este documento es el usuario <strong> '.$nombre.' </strong> y aún no está compartido con otros usuarios
 							  </div>';
 
 				    }else if($rows > 0){
@@ -266,8 +275,8 @@ class Works {
 										 echo "<tr>";
 										 $sql_2 = "select af_usuarios.name from af_usuarios inner join af_shares on af_usuarios.id = af_shares.user_id where af_shares.document_id = '$id'";
 										 $query_2($conn,$sql_2);
-										 while($row = mysqli_fetch_array($query_2)){
-											 echo "<td align=center>".$row['name']."</td>";
+										 while($row_2 = mysqli_fetch_array($query_2)){
+											 echo "<td align=center>".$row_2['name']."</td>";
 											 echo "<td align=center>".$fila['type_share']."</td>";
 											 echo "<td class='text-nowrap'>";
 											 echo '</td>';
@@ -282,14 +291,16 @@ class Works {
 
 				    
 				     echo '<form id="fr_share_work_ajax" method="POST">
-				     		<inut type="hidden" id="document_id" name="document_id" value="'.$id.'">
+				     		<input type="hidden" id="document_id" name="document_id" value="'.$id.'">
+				     		<input type="hidden" id="user_id" name="user_id" value="'.$user_id.'">
 					  
+							 	 
 							 	 <div class="form-group">
-								  <label for="share">Compartir:</label>
-								  <select class="form-control" id="share" name="share">
+								  <label for="share">Estado:</label>
+								  <select class="form-control" id="share" name="share" required>
 								    <option value="" disabled selected>Seleccionar</option>
-								    <option value="0">No Compartir</option>
-								    <option value="1">Compartir</option>
+								    <option value="0" '.(($share == 0) ? "Selected" : "" ).'>No Compartido</option>
+								    <option value="1" '.(($share == 1) ? "Selected" : "" ).'>Compartido</option>
 								  </select>
 								</div>
 
@@ -305,17 +316,17 @@ class Works {
 							 
 				                <div class="form-group">
 				                <label for="users">Usuarios</label>
-				                <select class="form-control" id="users" name="users" required>
+				                <select class="form-control" id="share_user_id" name="share_user_id" required>
 				                <option value="" disabled selected>Seleccionar</option>';
 				                    
-				                    $sql_1 = "SELECT name FROM af_usuarios order by name ASC";
+				                    $sql_1 = "SELECT name, id FROM af_usuarios order by name ASC";
 				                    mysqli_select_db($conn,$dbase);
 				                    $query_1 = mysqli_query($conn,$sql_1);
 
 				                    if($query_1){
 				                        while ($valores = mysqli_fetch_array($query_1)){
-				                        	if($valores['name'] != 'Administrador'){
-				                        		echo '<option value="'.$valores[name].'">'.$valores[name].'</option>';
+				                        	if((strcmp($valores['name'], 'Administrador') > 0) && (strcmp($valores['name'],$nombre) > 0)){
+				                        		echo '<option value="'.$valores[id].'">'.$valores[name].'</option>';
 				                        	}
 				                        }
 				                     }
@@ -378,8 +389,28 @@ class Works {
 			echo 7; // documento existente
 		}
 
-	}
+	} //END OF FUNCTION
 
+
+	public function shareWork($oneWork,$user_id,$share_user_id,$share,$document_id,$conn,$dbase){
+
+		$sql = "select count(id) from af_shares where user_id = '$share_user_id' and document_id = '$document_id'";
+		$query = mysqli_query($conn,$sql);
+		$rows = mysqli_num_rows($query);
+
+		if($rows == 0){
+
+
+		}else if($rows > 0){
+			echo 3; // este usuario ya está asignado a este documento
+		}
+
+
+
+
+
+
+	} // END OF FUNCTION
 
 	public function mysqlErrorLogs($error){
     
