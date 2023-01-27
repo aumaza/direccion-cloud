@@ -155,6 +155,7 @@ $(document).ready(function(){
                     console.log(values);
                     console.log("================================================================================================================");
                     setTimeout(function() { $(".close").click(); }, 4000);
+                    //window.location.href = window.location.href;
                     }else if(r == -1){
                         var mensaje = `<br><div class="alert alert-danger alert-dismissible">
                                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
@@ -204,6 +205,131 @@ $(document).ready(function(){
                                         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                                             <p align=center><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Tengo Datos!!</p></div>`;
                         document.getElementById('messageDocument').innerHTML = mensaje;
+                        console.log("================================================================================================================");
+                        console.log("Message Code: (" +r+ ") Tengo Datos");
+                        console.log(values);
+                        console.log("================================================================================================================");
+                        setTimeout(function() { $(".close").click(); }, 4000);
+                    }
+                    
+                    
+            },
+            
+        });
+
+        return false;
+    });
+});
+
+
+// ========================================================================================================================================= //
+
+// NUEVO COMPARTICION DE DOCUMENTO
+$(document).ready(function(){
+    $('#share_work').click(function(){
+        //e.preventDefault();
+        const form = document.querySelector('#fr_share_work_ajax');
+        
+        const document_id = document.querySelector('#document_id');
+        const share = document.querySelector('#share');
+        const type_share = document.querySelector('#type_share');
+        const share_user_id = document.querySelector('#share_user_id');
+        
+        const formData = new FormData(form);
+        const values = [...formData.entries()];
+        //console.log(values);
+        
+        formData.append('document_id', document_id.value);
+        formData.append('share', share.value);
+        formData.append('type_share', type_share.value);
+        formData.append('share_user_id', share_user_id.value);
+                
+            
+               
+         jQuery.ajax({
+            type:"POST",
+            method:"POST",
+            url:"../modules/works/add_shares.php",
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success:function(r){
+                if(r == 1){
+                    var mensaje = `<br><div class="alert alert-success alert-dismissible">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                        <p align=center><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> El Documento ha sido actualizado y compartido Exitosamente. Aguarde un Instante</p></div>`;
+                    document.getElementById('messageDocumentShare').innerHTML = mensaje;
+                    $('#type_share').val('');
+                    $('#share_user_id').val('');
+                    $('#share').focus();
+                    console.log("================================================================================================================");
+                    console.log("Message Code: (" +r + ") Document Share and update Successfully");
+                    console.log(values);
+                    console.log("================================================================================================================");
+                    setTimeout(function() { $(".close").click(); }, 4000);
+                    setTimeout(() => {
+                        document.location.reload();
+                    }, 3000);
+
+                    }else if(r == -1){
+                        var mensaje = `<br><div class="alert alert-danger alert-dismissible">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                            <p align=center><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Error. Hubo un problema al intentar actualizar y comparir el documento</p></div>`;
+                        document.getElementById('messageDocumentShare').innerHTML = mensaje;
+                        $('#type_share').val('');
+                        $('#share_user_id').val('');
+                        $('#share').focus();
+                        console.log("================================================================================================================");
+                        console.log("Message Code: (" +r + ") It was a problem while attemp update and share the document");
+                        console.log(values);
+                        console.log("================================================================================================================");
+                        setTimeout(function() { $(".close").click(); }, 4000);
+                    }
+                    else if(r == 5){
+                        var mensaje = `<br><div class="alert alert-danger alert-dismissible">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                            <p align=center><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Error, Hay campos sin completar!!</p></div>`;
+                        document.getElementById('messageDocumentShare').innerHTML = mensaje;
+                        $('#type_share').val('');
+                        $('#share_user_id').val('');
+                        $('#share').focus();
+                        console.log("================================================================================================================");
+                        console.log("Message Code: (" +r+ ") There is some fields empty");
+                        console.log(values);
+                        console.log("================================================================================================================");
+                        setTimeout(function() { $(".close").click(); }, 4000);
+                    }
+                    else if(r == 7){
+                        var mensaje = `<br><div class="alert alert-danger alert-dismissible">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                            <p align=center><span class="glyphicon glyphicon-ban-circle" aria-hidden="true"></span> Este documento ya está compartido con el usuario seleccionado!!</p></div>`;
+                        document.getElementById('messageDocumentShare').innerHTML = mensaje;
+                        $('#type_share').val('');
+                        $('#share_user_id').val('');
+                        $('#share').focus();
+                        console.log("================================================================================================================");
+                        console.log("Message Code: (" +r+ ") Document Already share with user selected!");
+                        console.log(values);
+                        console.log("================================================================================================================");
+                        setTimeout(function() { $(".close").click(); }, 4000);
+                    }
+                    else if(r == 13){
+                        var mensaje = `<br><div class="alert alert-danger alert-dismissible">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                            <p align=center><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Error de conexion!!</p></div>`;
+                        document.getElementById('messageDocumentShare').innerHTML = mensaje;
+                        console.log("================================================================================================================");
+                        console.log("Message Code: (" +r+ ") Error General Conection");
+                        console.log(values);
+                        console.log("================================================================================================================");
+                        setTimeout(function() { $(".close").click(); }, 4000);
+                    }
+                    else if(r == 9){
+                        var mensaje = `<br><div class="alert alert-success alert-dismissible">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                            <p align=center><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Tengo Datos!!</p></div>`;
+                        document.getElementById('messageDocumentShare').innerHTML = mensaje;
                         console.log("================================================================================================================");
                         console.log("Message Code: (" +r+ ") Tengo Datos");
                         console.log(values);

@@ -12,6 +12,7 @@ class Works {
 	private $share = '';
 	private $share_user_id = '';
 	private $document_id = '';
+	private $type_share = '';
 
 // CONSTRUCTOR
 	function __construct(){
@@ -24,6 +25,7 @@ class Works {
 		$this->share = '';
 		$this->share_user_id = '';
 		$this->document_id = '';
+		$this->type_share = '';
 	}
 
 // SETTERS
@@ -61,6 +63,10 @@ class Works {
 
 	private function setDocumentId($_var){
 		$this->document_id = $_var;
+	}
+
+	private function setTypeShare($_var){
+		$this->type_share = $_var;
 	}
 
 
@@ -102,8 +108,15 @@ class Works {
 		return $this->document_id = $_var;
 	}
 
+	private function getTypeShare($_var){
+		return $this->type_share = $_var;
+	}
 
-// METODOS
+// ====================================================================================================================================================================== //
+																	// METODOS // 
+// ====================================================================================================================================================================== //
+
+
 
 	/*
 	** LISTAR TODOS LOS DOCUMENTOS CREADOS
@@ -141,7 +154,6 @@ class Works {
                     <th class='text-nowrap text-center'>Fecha Modificación</th>
                     <th class='text-nowrap text-center'>Compartido</th>
                     <th class='text-nowrap text-center'>Acciones</th>
-                    <th>&nbsp;</th>
                     </thead>";
 
 
@@ -176,7 +188,8 @@ class Works {
                     }else if($oneWork->getShare($fila['share']) == 1){
                     	echo '<form action="#" method="POST">
                     			<input type="hidden" id="id" name="id" value="'.$fila['id'].'">
-                    			<button type="submit" class="btn btn-default" name="edit_work"><span class="glyphicon glyphicon-pencil"></span> Editar Documento</button>
+                    			<button type="submit" class="btn btn-warning" name="share_work"><span class="glyphicon glyphicon-random"></span> Compartir</button>
+                    			<button type="submit" class="btn btn-primary" name="edit_work"><span class="glyphicon glyphicon-pencil"></span> Editar</button>
                     		  </form>';
                     }
 
@@ -198,7 +211,9 @@ class Works {
 
 	}
 
-
+// ====================================================================================================================================================================== //
+														// FORMULARIOS //
+// ====================================================================================================================================================================== //
 
 	public function formNewWork($user_id){
 
@@ -230,6 +245,61 @@ class Works {
 	}
 
 
+// ====================================================================================================================================================================== //
+
+
+public function formEditWork($document_id,$user_id,$conn,$dbase){
+
+		mysqli_select_db($conn,$dbase);
+		$sql = "select * from af_works W, af_shares S where W.id = '$document_id and S.document_id = '$document_id' and S.user_id = '$user_id'";
+		$query = mysqli_query($conn,$sql);
+		$row = mysqli_fetch_assoc($query);
+
+		echo '<div class="container">
+				  <div class="jumbotron">
+				    
+				    <div id="head" class="container-fluid text-center"><h2><span class="glyphicon glyphicon-pencil"></span> Editar Documento</h2></div><hr>
+				  		
+				  		<form id="fr_save_work_ajax" >
+				  			<input type="hidden" id="user_id" name="user_id" value="'.$user_id.'">
+				  			<input type="hidden" id="document_id" name="document_id" value="'.$document_id.'">';
+
+				  			if($row['type_share'] == 'r'){
+
+							    echo '<div class="form-group">
+									        <textarea class="form-control document-editor" name="editor1" id="editor1" rows="10" cols="80" readonly>'.$row['docuemnt'].'</textarea>
+									  </div><br>';
+
+							}
+							if($row['type_share'] == 'rw'){
+
+								echo '<div class="form-group">
+									        <textarea class="form-control document-editor" name="editor1" id="editor1" rows="10" cols="80">'.$row['docuemnt'].'</textarea>
+									  </div><br>';
+							}
+
+
+
+						echo '<div class="form-group">
+							      <label for="document_name">Nombre del Documento:</label>
+							      <input type="text" class="form-control" id="document_name" name="document_name" value="'.$document_name.'" readonly>
+							  </div>
+
+						    
+						    <button type="submit" class="btn btn-default" id="save_work"><span class="glyphicon glyphicon-floppy-disk"></span> Guardar</button>
+							
+						  </form><hr>
+
+						  <div id="messageDocument"></div>
+						    
+
+				  </div>
+			  </div>';
+
+	}
+
+// ====================================================================================================================================================================== //
+
 
 	public function formShareWork($id,$conn,$dbase){
 
@@ -259,9 +329,12 @@ class Works {
 							  </div>';
 
 				    }else if($rows > 0){
-				    	echo '<div class="alert alert-warning">
-								  <span class="glyphicon glyphicon-info-sign"></span> Este documento está compartido con los siguientes usuarios <hr>';
+				    	echo '<div class="alert alert-success">
+								  <span class="glyphicon glyphicon-info-sign"></span> Este documento está compartido con los siguientes usuarios 
+							  </div><hr>';
 
+							  		$sql_4 = "select * from af_shares where document_id = '$id'";
+							  		$query_4 = mysqli_query($conn,$sql_4);
 
 								  echo "<table class='display compact' style='width:100%' id='userShareTable'>";
 							      echo "<thead>
@@ -270,13 +343,14 @@ class Works {
 							            </thead>";
 
 
-								while($fila = mysqli_fetch_array($resultado)){
+								while($fila = mysqli_fetch_array($query_4)){
 										  // Listado normal
 										 echo "<tr>";
 										 $sql_2 = "select af_usuarios.name from af_usuarios inner join af_shares on af_usuarios.id = af_shares.user_id where af_shares.document_id = '$id'";
-										 $query_2($conn,$sql_2);
+										 $query_2 = mysqli_query($conn,$sql_2);
 										 while($row_2 = mysqli_fetch_array($query_2)){
 											 echo "<td align=center>".$row_2['name']."</td>";
+										}
 											 echo "<td align=center>".$fila['type_share']."</td>";
 											 echo "<td class='text-nowrap'>";
 											 echo '</td>';
@@ -286,18 +360,16 @@ class Works {
 									echo "</table>";
 									echo "<hr>";
 									
-								}
 					}
+					
 
 				    
 				     echo '<form id="fr_share_work_ajax" method="POST">
 				     		<input type="hidden" id="document_id" name="document_id" value="'.$id.'">
-				     		<input type="hidden" id="user_id" name="user_id" value="'.$user_id.'">
-					  
-							 	 
+				     		 	 
 							 	 <div class="form-group">
 								  <label for="share">Estado:</label>
-								  <select class="form-control" id="share" name="share" required>
+								  <select class="form-control" id="share" name="share">
 								    <option value="" disabled selected>Seleccionar</option>
 								    <option value="0" '.(($share == 0) ? "Selected" : "" ).'>No Compartido</option>
 								    <option value="1" '.(($share == 1) ? "Selected" : "" ).'>Compartido</option>
@@ -316,7 +388,7 @@ class Works {
 							 
 				                <div class="form-group">
 				                <label for="users">Usuarios</label>
-				                <select class="form-control" id="share_user_id" name="share_user_id" required>
+				                <select class="form-control" id="share_user_id" name="share_user_id">
 				                <option value="" disabled selected>Seleccionar</option>';
 				                    
 				                    $sql_1 = "SELECT name, id FROM af_usuarios order by name ASC";
@@ -338,14 +410,21 @@ class Works {
 				                echo '</select></div>
 				                
 							  
-							  <button type="submit" class="btn btn-default" id="share_user"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>
+							  <button type="submit" class="btn btn-default" id="share_work"><span class="glyphicon glyphicon-ok"></span> Aceptar</button>
 							
-							</form> 
+							</form><hr>
 				  
+				  <div id="messageDocumentShare"></div>
 
 				  </div>
 			  </div>';
 	}
+
+
+// ====================================================================================================================================================================== //
+														// PERSISTENCIA //
+// ====================================================================================================================================================================== //
+
 
 
 	public function addWork($oneWork,$user_id,$document_name,$document_text,$conn,$dbase){
@@ -392,25 +471,70 @@ class Works {
 	} //END OF FUNCTION
 
 
-	public function shareWork($oneWork,$user_id,$share_user_id,$share,$document_id,$conn,$dbase){
+// ====================================================================================================================================================================== //
 
-		$sql = "select count(id) from af_shares where user_id = '$share_user_id' and document_id = '$document_id'";
+
+	public function shareWork($oneWork,$share_user_id,$share,$document_id,$type_share,$conn,$dbase){
+
+		mysqli_select_db($conn,$dbase);
+		$sql = "select * from af_shares where user_id = '$share_user_id' and document_id = '$document_id'";
 		$query = mysqli_query($conn,$sql);
 		$rows = mysqli_num_rows($query);
 
 		if($rows == 0){
 
+			// actualizamos el estado de comparticion del documento
+			$sql_1 = "update af_works set share = $oneWork->setShare('$share') where id = $oneWork->getDocumentId('$document_id')";
+			$query_1 = mysqli_query($conn,$sql_1);
 
-		}else if($rows > 0){
-			echo 3; // este usuario ya está asignado a este documento
+
+            if($query_1){
+
+            	// se agregan usuarios con los que se comparte el documento
+				$sql_2 = "INSERT INTO af_shares ".
+            			 "(user_id,
+              				document_id,
+              		   		type_share)".
+            			"VALUES ".
+            			"($oneWork->setUserId('$share_user_id'),
+              				$oneWork->setDocumentId('$document_id'),
+              				$oneWork->setTypeShare('$type_share'))";
+
+            	$query_2 = mysqli_query($conn,$sql_2);
+
+            	if($query_2){
+            		echo 1; // se ha actualizado en insertado correctamente el permiso
+            		$success = $sql_1;
+                    $oneWork->mysqlSuccessLogs($success);
+                    $success = $sql_2;
+                    $oneWork->mysqlSuccessLogs($success);
+            	}else{
+            		echo -1; // no se ha podido insertar el registro de comparticion de documento
+            		$error = mysqli_error($conn);
+                    $oneWork->mysqlErrorLogs($error);
+            	}
+           	
+           	}else{
+           		echo -1; // no se pudo actualizar el permiso
+           		$error = mysqli_error($conn);
+                $oneWork->mysqlErrorLogs($error);
+           	}
+
+
+
 		}
 
-
-
-
-
+		if($rows != 0){
+			echo 7; // este usuario ya está asignado a este documento
+		}
 
 	} // END OF FUNCTION
+
+	
+// ====================================================================================================================================================================== //
+														// LOGS //
+// ====================================================================================================================================================================== //
+
 
 	public function mysqlErrorLogs($error){
     

@@ -171,6 +171,11 @@
                 $id = mysqli_real_escape_string($conn,$_POST['id']);
                 $oneWork->formShareWork($id,$conn,$dbase);
             }
+            
+            if(isset($_POST['edit_work'])){
+                $document_id = mysqli_real_escape_string($conn,$_POST['id']);
+                $oneWork->formEditWork($document_id,$user_id,$conn,$dbase);   
+            }
 
 
         }else{
