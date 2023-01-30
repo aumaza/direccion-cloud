@@ -224,6 +224,107 @@ $(document).ready(function(){
 
 // ========================================================================================================================================= //
 
+// EDITAR DOCUMENTO
+$(document).ready(function(){
+    $('#save_edit_work').click(function(){
+        //e.preventDefault();
+        const form = document.querySelector('#fr_save_edit_work_ajax');
+        
+        const user_id = document.querySelector('#user_id');
+        const document_id = document.querySelector('#document_id');
+        const document_text = CKEDITOR.instances.editor1.getData();
+        var text = document_text.toString();
+    
+        console.log("Texto del Documento: " + document_text);
+    
+        
+        const formData = new FormData(form);
+        const values = [...formData.entries()];
+        //console.log(values);
+        
+        formData.append('user_id', user_id.value);
+        formData.append('document_id', document_id.value);
+        formData.append('editor1', text);
+                
+            
+               
+         jQuery.ajax({
+            type:"POST",
+            method:"POST",
+            url:"../modules/works/edit_document.php",
+            data: formData,
+            cache: false,
+            processData: false,
+            contentType: false,
+            success:function(r){
+                if(r == 1){
+                    var mensaje = `<br><div class="alert alert-success alert-dismissible">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                        <p align=center><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> El Documento ha sido actualizado Exitosamente</p></div>`;
+                    document.getElementById('messageDocumentUpdate').innerHTML = mensaje;
+                    console.log("================================================================================================================");
+                    console.log("Message Code: (" +r + ") Document Update Successfully");
+                    console.log(values);
+                    console.log("================================================================================================================");
+                    setTimeout(function() { $(".close").click(); }, 4000);
+                    //window.location.href = window.location.href;
+                    }else if(r == -1){
+                        var mensaje = `<br><div class="alert alert-danger alert-dismissible">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                            <p align=center><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Error. Hubo un problema al intentar actualizar el documento</p></div>`;
+                        document.getElementById('messageDocumentUpdate').innerHTML = mensaje;
+                        console.log("================================================================================================================");
+                        console.log("Message Code: (" +r + ") It was a problem while attemp update document");
+                        console.log(values);
+                        console.log("================================================================================================================");
+                        setTimeout(function() { $(".close").click(); }, 4000);
+                    }
+                    else if(r == 5){
+                        var mensaje = `<br><div class="alert alert-danger alert-dismissible">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                            <p align=center><span class="glyphicon glyphicon-alert" aria-hidden="true"></span> Error, Hay campos sin completar!!</p></div>`;
+                        document.getElementById('messageDocumentUpdate').innerHTML = mensaje;
+                        console.log("================================================================================================================");
+                        console.log("Message Code: (" +r+ ") There is some fields empty");
+                        console.log(values);
+                        console.log("================================================================================================================");
+                        setTimeout(function() { $(".close").click(); }, 4000);
+                    }
+                    else if(r == 13){
+                        var mensaje = `<br><div class="alert alert-danger alert-dismissible">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                            <p align=center><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Error de conexion!!</p></div>`;
+                        document.getElementById('messageDocumentUpdate').innerHTML = mensaje;
+                        console.log("================================================================================================================");
+                        console.log("Message Code: (" +r+ ") Error General Conection");
+                        console.log(values);
+                        console.log("================================================================================================================");
+                        setTimeout(function() { $(".close").click(); }, 4000);
+                    }
+                    else if(r == 9){
+                        var mensaje = `<br><div class="alert alert-success alert-dismissible">
+                                        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                            <p align=center><span class="glyphicon glyphicon-ok" aria-hidden="true"></span> Tengo Datos!!</p></div>`;
+                        document.getElementById('messageDocumentUpdate').innerHTML = mensaje;
+                        console.log("================================================================================================================");
+                        console.log("Message Code: (" +r+ ") Tengo Datos");
+                        console.log(values);
+                        console.log("================================================================================================================");
+                        setTimeout(function() { $(".close").click(); }, 4000);
+                    }
+                    
+                    
+            },
+            
+        });
+
+        return false;
+    });
+});
+
+
+// ========================================================================================================================================= //
+
 // NUEVO COMPARTICION DE DOCUMENTO
 $(document).ready(function(){
     $('#share_work').click(function(){

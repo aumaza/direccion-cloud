@@ -251,7 +251,7 @@ class Works {
 public function formEditWork($document_id,$user_id,$conn,$dbase){
 
 		mysqli_select_db($conn,$dbase);
-		$sql = "select * from af_works W, af_shares S where W.id = '$document_id and S.document_id = '$document_id' and S.user_id = '$user_id'";
+		$sql = "select * from af_works W, af_shares S where W.id = '$document_id' and S.document_id = '$document_id' and W.user_id = '$user_id'";
 		$query = mysqli_query($conn,$sql);
 		$row = mysqli_fetch_assoc($query);
 
@@ -260,37 +260,46 @@ public function formEditWork($document_id,$user_id,$conn,$dbase){
 				    
 				    <div id="head" class="container-fluid text-center"><h2><span class="glyphicon glyphicon-pencil"></span> Editar Documento</h2></div><hr>
 				  		
-				  		<form id="fr_save_work_ajax" >
+				  		<form id="fr_save_edit_work_ajax" >
 				  			<input type="hidden" id="user_id" name="user_id" value="'.$user_id.'">
 				  			<input type="hidden" id="document_id" name="document_id" value="'.$document_id.'">';
 
+				  		if($row['owner'] != 1){
 				  			if($row['type_share'] == 'r'){
 
 							    echo '<div class="form-group">
-									        <textarea class="form-control document-editor" name="editor1" id="editor1" rows="10" cols="80" readonly>'.$row['docuemnt'].'</textarea>
+									        <textarea class="form-control document-editor" name="editor1" id="editor1" rows="10" cols="80" readonly>'.$row['document'].'</textarea>
 									  </div><br>';
 
 							}
 							if($row['type_share'] == 'rw'){
 
 								echo '<div class="form-group">
-									        <textarea class="form-control document-editor" name="editor1" id="editor1" rows="10" cols="80">'.$row['docuemnt'].'</textarea>
+									        <textarea class="form-control document-editor" name="editor1" id="editor1" rows="10" cols="80">'.$row['document'].'</textarea>
 									  </div><br>';
 							}
+						}
+
+						if($row['owner'] == 1){
+				  			echo '<div class="form-group">
+							        <textarea class="form-control document-editor" name="editor1" id="editor1" rows="10" cols="80">'.$row['document'].'</textarea>
+								  </div><br>';
+						}
+
 
 
 
 						echo '<div class="form-group">
 							      <label for="document_name">Nombre del Documento:</label>
-							      <input type="text" class="form-control" id="document_name" name="document_name" value="'.$document_name.'" readonly>
+							      <input type="text" class="form-control" id="document_name" name="document_name" value="'.$row['document_name'].'" readonly>
 							  </div>
 
 						    
-						    <button type="submit" class="btn btn-default" id="save_work"><span class="glyphicon glyphicon-floppy-disk"></span> Guardar</button>
+						    <button type="submit" class="btn btn-default" id="save_edit_work"><span class="glyphicon glyphicon-floppy-disk"></span> Guardar</button>
 							
 						  </form><hr>
 
-						  <div id="messageDocument"></div>
+						  <div id="messageDocumentUpdate"></div>
 						    
 
 				  </div>
@@ -470,6 +479,33 @@ public function formEditWork($document_id,$user_id,$conn,$dbase){
 
 	} //END OF FUNCTION
 
+
+// ====================================================================================================================================================================== //
+
+
+	public function updateWork($oneWork,$user_id,$document_id,$document_text,$conn,$dbase){
+
+		$actual_date = date('Y-m-d');
+
+		mysqli_select_db($conn,$dbase);
+		$sql = "update af_works set 
+				document = $oneWork->setDocument('$document_text'), 
+				modified_user_id = $oneWork->setModifiedUserId('$user_id'), 
+				date_modified = $oneWork->setDateModified('$actual_date')
+				where id = $oneWork->getDocumentId('$document_id')";
+		$query = mysqli_query($conn,$sql);
+
+		if($query){
+			echo 1; // actualizacion exitosa
+			$success = $sql;
+            $oneWork->mysqlSuccessLogs($success);
+		}else{
+			echo -1; // hubo un problema al intentar actualizar el registro
+			$error = mysqli_error($conn);
+            $oneWork->mysqlErrorLogs($error);
+		}
+
+	} // END OF FUNCTION
 
 // ====================================================================================================================================================================== //
 
