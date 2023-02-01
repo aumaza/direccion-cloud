@@ -34,7 +34,8 @@
                 <head>
                 <title>Administrador de Archivos - Main</title>
                 <meta charset="utf-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1">';
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="icon" type="image/png" href="../static/img/preferences-system-services.png" />';
                 skeleton();
                 echo '</head><body style = "background: #839192;">';
                 echo '<br><div class="container">
@@ -57,6 +58,7 @@
   <title>Dirección Cloud  - Menú Principal</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="../static/img/preferences-system-services.png" />
   <?php skeleton(); ?>
 
 
@@ -162,14 +164,14 @@
             $oneWork = new Works(); // se creao el objeto work
 
             if(isset($_POST['documents'])){
-                $oneWork->listDocuments($oneWork,$conn,$dbase);
+                $oneWork->listDocuments($oneWork,$user_id,$conn,$dbase);
             }
             if(isset($_POST['new_work'])){
                 $oneWork->formNewWork($user_id);
             }
             if(isset($_POST['share_work'])){
                 $id = mysqli_real_escape_string($conn,$_POST['id']);
-                $oneWork->formShareWork($id,$conn,$dbase);
+                $oneWork->formShareWork($id,$nombre,$conn,$dbase);
             }
             
             if(isset($_POST['edit_work'])){

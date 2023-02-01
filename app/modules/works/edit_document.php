@@ -14,8 +14,8 @@
             if(($user_id == '') || ($document_id == '') || ($document_text == '')){
                 echo 5; // hay campos sin completar
             }else{
-                echo 9; // tengo datos
-                //$oneWork->updateWork($oneWork,$user_id,$document_id,$document_text,$conn,$dbase);
+                //echo 9; // tengo datos
+                $oneWork->updateWork($oneWork,$user_id,$document_id,$document_text,$conn,$dbase);
             }
         
         }else{
